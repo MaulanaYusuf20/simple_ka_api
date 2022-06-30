@@ -1,4 +1,4 @@
-package main
+package mainrows
 
 import (
 	"math/rand"
@@ -54,6 +54,8 @@ func main() {
 				Status: err.Error(),
 			})
 		}
+
+		defer rows.Close()
 
 		if rows.Next() {
 			var role string
@@ -147,6 +149,8 @@ func main() {
 			})
 		}
 
+		defer rows.Close()
+
 		var result []*JadwalModel
 
 		for rows.Next() {
@@ -235,6 +239,8 @@ func main() {
 				Status: err.Error(),
 			})
 		}
+
+		defer rows.Close()
 
 		for rows.Next() {
 			orders := new(OrdersModel)
@@ -385,6 +391,8 @@ func main() {
 				Status: err.Error(),
 			})
 		}
+
+		defer rows.Close()
 
 		var user User
 		if rows.Next() {
