@@ -1,4 +1,4 @@
-package mainrows
+package main
 
 import (
 	"math/rand"
