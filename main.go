@@ -361,6 +361,49 @@ func main() {
 		})
 	})
 
+	e.GET("user/:email", func(ctx echo.Context) error {
+		type User struct {
+			Nik   string `json:"nik"`
+			Nama  string `json:"nama"`
+			Email string `json:"email"`
+			NoHp  string `json:"noHp"`
+		}
+
+		type Respose struct {
+			Code   int    `json:"code"`
+			Status string `json:"status"`
+			Data   *User  `json:"data"`
+		}
+
+		email := ctx.Param("email")
+
+		SQL := "SELECT nik, email, nama, no_hp FROM public.customer WHERE email = $1"
+		rows, err := db.Query(SQL, email)
+		if err != nil {
+			return ctx.JSON(http.StatusBadRequest, &Respose{
+				Code:   http.StatusBadRequest,
+				Status: err.Error(),
+			})
+		}
+
+		var user User
+		if rows.Next() {
+			err = rows.Scan(&user.Nik, &user.Email, &user.Nama, &user.NoHp)
+			if err != nil {
+				return ctx.JSON(http.StatusBadRequest, &Respose{
+					Code:   http.StatusBadRequest,
+					Status: err.Error(),
+				})
+			}
+		}
+
+		return ctx.JSON(http.StatusOK, &Respose{
+			Code:   http.StatusOK,
+			Status: "success",
+			Data:   &user,
+		})
+	})
+
 	port := ":" + os.Getenv("PORT")
 	e.Logger.Fatal(e.Start(port))
 }
